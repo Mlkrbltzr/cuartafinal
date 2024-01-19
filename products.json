@@ -1,0 +1,10 @@
+[
+    { "name": "Pollo Palta Queso Crema Tempura", "description": "Tempurizado", "price": 4500 },
+    { "name": "Camaron Palta Queso Crema Tempura", "description": "Tempurizado", "price": 5500 },
+    { "name": "Pollo Queso Crema", "description": "Envuelto en Nori", "price": 3500 },
+    { "name": "Camaron Queso Crema Tempura", "description": "Envuelto en Nori", "price": 4000 },
+    { "name": "Gohan Pollo Palta Queso Crema Tempura", "description": "Tempurizado", "price": 5500 },
+    { "name": "Gohan Camaron Palta Queso Crema Tempura", "description": "Tempurizado", "price": 5800 },
+    { "name": "Champiñon Palta Queso Crema (Envuelto en Nori)", "description": "Envuelto en Nori", "price": 3500 },
+    { "name": "Champiñon Palta Queso Crema (Tempurizado)", "description": "Tempurizado", "price": 4000 }
+  ]
