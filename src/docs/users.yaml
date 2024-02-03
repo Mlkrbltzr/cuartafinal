@@ -6,7 +6,7 @@ paths:
         - users
       responses:
         "200":
-          description: "Datos obtenidos correctamente"
+          description: "Datos obtenidos satisfactoriamente"
           content:
             application/json:
               schema:
@@ -28,22 +28,22 @@ paths:
               properties:
                 first_name:
                   type: string
-                  description: Primer nombre de usuario
+                  description: Nombre del usuario
                 last_name:
                   type: string
-                  description: Apellido de usuario
+                  description: Apellido del usuario
                 email:
                   type: string
-                  description: Email de usuario
+                  description: Email del usuario
                 age:
                   type: number
-                  description: Edad de usuario
+                  description: Edad del usuario
                 password:
                   type: string
-                  description: Contraseña de usuario
+                  description: Contraseña del usuario
                 rol:
                   type: string
-                  description: Rol de usuario
+                  description: Rol del usuario
               required:
                 - first_name
                 - last_name

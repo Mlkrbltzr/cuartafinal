@@ -1,13 +1,13 @@
 import jwt from 'jsonwebtoken';
 
 export function generateAndSetToken(res, email, password) {
-  const token = jwt.sign({ email, password, role: "user" }, "Secret-key", { expiresIn: "24h" });
+  const token = jwt.sign({ email, password, role: "user" }, "ClaveSecreta", { expiresIn: "24h" });
   res.cookie("token", token, { httpOnly: true, maxAge: 60 * 60 * 1000 });
   return token
 }
 export function getEmailFromTokenLogin(token) {
   try {
-    const decoded = jwt.verify(token, 'Secret-key');
+    const decoded = jwt.verify(token, 'ClaveSecreta');
     return decoded.email;
   } catch (error) {
     console.error('Error al decodificar el token:', error);

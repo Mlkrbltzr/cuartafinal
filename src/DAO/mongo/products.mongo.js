@@ -1,3 +1,4 @@
+//products.mongo.js
 import productsModel from './models/products.model.js'
 import mongoose from 'mongoose'
 

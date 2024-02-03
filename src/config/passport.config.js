@@ -14,17 +14,15 @@ const cookieExtractor = req =>{
 }
 const initializePassport = () => {
     passport.use('jwt', new JwtStrategy({
-        jwtFromRequest:ExtractJwt.fromExtractors([cookieExtractor]),
-        secretOrKey: 'Secret-key'
-    }, async(jwt_payload, done)=>{
-        try{
-            return done(null, jwt_payload)
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: 'ClaveSecreta'
+    }, async(jwt_payload, done) => {
+        try {
+            return done(null, jwt_payload);
+        } catch (err) {
+            return done(err);
         }
-        catch(err){
-            return done(err)
-        }
-    }
-    ))
+    }));
 }
 
 export default initializePassport

@@ -1,133 +1,67 @@
-body{
-    background-color: 	#B5B2B2;
+body {
+    background: linear-gradient(to bottom, #333333, #1a1a1a); /* Gris oscuro a gris más oscuro para el fondo principal */
+    color: #fff;
 }
 
 .container {
     display: flex;
 }
-.infoProd{
-    border: 2px solid white;
+
+.infoProd,
+.infoUser,
+.formulario {
+    border: 2px solid #fff;
     width: 48%;
+    background: linear-gradient(to bottom, #333333, #1a1a1a); /* Efecto metalizado para los contenedores */
+    color: #fff;
+    padding: 20px;
+    margin: 10px;
 }
-.infoUser{
-    border: 2px solid white;
-    width: 48%;
+
+.formulario {
+    padding: 20px;
 }
-.formulario{
-    border: 2px solid white;
-    width: 48%;
-    padding: 10px 50px 50px 50px;
-}
-.formulario input, select{
-    width: 50%;
+
+.formulario input,
+select {
+    width: 100%;
     margin-top: 20px;
 }
-.inputs{
+
+.inputs {
     display: flex;
-}
-.botones{
-    margin-top: 50px;
-}
-.detalleProd table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-.detalleUser table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
-.detalleProd th,
-.detalleProd td {
-    border: 1px solid #dee2e6;
-    padding: 8px;
-    text-align: left;
-}
-
-.detalleProd th {
-    background-color: #f8f9fa;
-    color: #495057;
-}
-
-.detalleProd tr:nth-child(odd) {
-    background-color: #f2f2f2;
-}
-
-.detalleProd tr:hover {
-    background-color: #e2e6ea;
-}
-
-
-/*User*/
-.detalleUser table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-.detalleUser table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-.detalleUser th,
-.detalleUser td {
-    border: 1px solid #dee2e6;
-    padding: 8px;
-    text-align: left;
-}
-
-.detalleUser th {
-    background-color: #f8f9fa;
-    color: #495057;
-}
-
-.detalleUser tr:nth-child(odd) {
-    background-color: #f2f2f2;
-}
-
-.detalleUser tr:hover {
-    background-color: #e2e6ea;
-}
-
-/* Estilos para los inputs */
-input[type="text"],
-input[type="number"],
-input[type="email"],
-input[type="password"],
-textarea {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 100%;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-}
-
-/* Estilo para el foco del input */
-input[type="text"]:focus,
-input[type="number"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-textarea:focus {
-    outline: none;
-    border-color: #007bff; /* Cambia el color del borde al enfocar */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Agrega un efecto de sombra al enfocar */
+.botones {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
 }
 
 /* Estilo para los botones */
 button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007bff;
-    color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    background: linear-gradient(to bottom, #5b5a5a, #1a1a1a); /* Efecto metalizado para los botones */
+    color: #fff;
+    transition: background-color 0.3s;
 }
+
+/* Efecto al pasar el cursor sobre los botones */
+button:hover {
+    background: linear-gradient(to bottom, #1a1a1a, #5b5a5a);
+}
+
+/* Estilo específico para los botones en .botones */
+.botones button {
+    flex: 1;
+    margin: 0 5px;
+}
+
 .quantity-container {
     display: flex;
     align-items: center;
@@ -139,5 +73,12 @@ button {
     margin: 0 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #B5B2B2;
+    background: linear-gradient(to bottom, #555555, #1a1a1a); /* Efecto metalizado para los botones de cantidad */
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+/* Efecto al pasar el cursor sobre el botón de cantidad */
+.quantity-btn:hover {
+    background: linear-gradient(to bottom, #1a1a1a, #555555);
 }

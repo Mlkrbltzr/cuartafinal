@@ -1,5 +1,6 @@
+//products.test.js
 import mongoose from 'mongoose'
-import Product from '../dao/mongo/products.mongo.js'
+import Product from '../DAO/mongo/products.mongo.js'
 import Assert from 'assert'
 import * as Chai from 'chai'
 import Supertest from 'supertest'
@@ -33,8 +34,8 @@ describe('Testing Product DAO Mocha/Chai/SuperTest', () => {
         let mockProduct = {
             description: "Test Description",
             image: "Test Image",
-            price: 1777,
-            stock: 77,
+            price: 122,
+            stock: 12,
             category: "Test Category",
             availability: "in_stock",
             owner: "Test Owner"
@@ -48,8 +49,8 @@ describe('Testing Product DAO Mocha/Chai/SuperTest', () => {
         let mockProductUpd = {
             description: "Test Desc Upd",
             image: "Test Image Upd",
-            price: 1777,
-            stock: 77,
+            price: 122,
+            stock: 12,
             category: "Test Category Upd",
             availability: "Test Availability Upd",
             owner: "Test Owner Upd"
@@ -78,8 +79,8 @@ describe('Testing Product DAO Mocha/Chai/SuperTest', () => {
         let mockProduct = {
             description: "Test POST",
             image: "Test POST",
-            price: 1777,
-            stock: 77,
+            price: 122,
+            stock: 12,
             category: "Test POST",
             availability: "in_stock",
             owner: "ge.astudillo.aray@gmail.com"

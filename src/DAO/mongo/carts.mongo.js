@@ -1,6 +1,7 @@
+//carts.mongo.js
+import mongoose from 'mongoose'
 import cartsModel from './models/cart.model.js'
 import productsModel from './models/products.model.js'
-import mongoose from 'mongoose'
 
 export default class Carts {
     constructor() {
@@ -42,8 +43,8 @@ export default class Carts {
                     continue;
                 }
     
-                // Validar si hay suficiente stock
-                if (productInCollection.stock >= producto.stock) {
+                // Verificar si 'stock' está definido en productInCollection antes de acceder a la propiedad
+                if (productInCollection.stock !== undefined && productInCollection.stock >= producto.stock) {
                     // Restar el stock en la colección de productos
                     await productsModel.updateOne(
                         { description: productInCollection.description },
@@ -119,7 +120,6 @@ export default class Carts {
                     quantity: quantity,
                 });
             }
-    
             // Guardar los cambios en el carrito
             await cart.save();
     
@@ -130,6 +130,7 @@ export default class Carts {
             throw new Error('Error al agregar producto al carrito');
         }
     };
+
     getCartWithProducts = async (cartId) =>
       {
         try

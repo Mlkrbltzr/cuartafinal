@@ -1,3 +1,4 @@
+//carts.router.js
 import { Router } from "express";
 //import { Carts } from '../dao/factory.js'
 import CartDTO from "../DAO/DTO/cart.dto.js";
@@ -58,24 +59,29 @@ router.post("/:cid/purchase", async (req, res) => {
         let id_cart = req.params.cid;
         const productos = req.body.productos;
         const correo = req.body.correo;
-        let cart = cartService.validateCart(id_cart)
+        let cart = await cartService.validateCart(id_cart);
+
         if (!cart) {
             req.logger.error("No se encontró el carrito con el ID proporcionado");
-            return { error: "No se encontró el carrito con el ID proporcionado" };
+            return res.status(404).json({ error: "No se encontró el carrito con el ID proporcionado" });
         }
-        let validaStock = cartService.validateStock({productos})
+
+        let validaStock = await cartService.validateStock({ productos });
 
         if (validaStock) {
-            let totalAmount = await cartService.getAmount({productos})
-            const ticketFormat = new TicketDTO({amount:totalAmount, purchaser:correo});
+            let totalAmount = await cartService.getAmount({ productos });
+            const ticketFormat = new TicketDTO({ amount: totalAmount, purchaser: correo });
             const result = await ticketService.createTicket(ticketFormat);
+            
+            // Realizar otras operaciones relacionadas con la compra...
         } else {
             req.logger.error("No hay suficiente stock para realizar la compra");
+            return res.status(400).json({ error: "No hay suficiente stock para realizar la compra" });
         }
     } catch (error) {
         req.logger.error("Error al procesar la compra:" + error.message);
         return res.status(500).json({ error: "Error interno al procesar la compra" });
     }
-})
+});
 
 export default router

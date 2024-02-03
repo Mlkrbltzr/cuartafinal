@@ -1,3 +1,4 @@
+//products.router.js
 import { Router } from "express";
 import ProductDTO from "../DAO/DTO/products.dto.js";
 import { productService, userService } from "../repository/index.js";
@@ -36,38 +37,37 @@ router.get("/:id", async (req, res) => {
     } 
 });
 //Crear producto
+// Crear producto
 router.post("/", async (req, res) => {
-    let { description, image, price, stock, category, availability, owner } = req.body
-    if (owner === undefined || owner == '') {
-        owner = 'ge.astudillo.aray@gmail.com'
-    }
-    const product = { description, image, price, stock, category, availability, owner }
-    if (!description || !price) {
-        try {
-            // Some code that might throw an error
+    let { description, image, price, stock, category, availability, owner } = req.body;
+
+    try {
+        if (!description || !price) {
             throw CustomError.createError({
                 name: 'Error en Creacion de Producto',
-                cause: generateProductErrorInfo(product),
+                cause: generateProductErrorInfo({ description, price }), // Pass the correct object here
                 message: 'Error al intentar crear el Producto',
                 code: EErrors.REQUIRED_DATA,
             });
-            req.logger.info('Se crea producto correctamente');
-        } catch (error) {
-            req.logger.error("Error al comparar contraseñas: " + error.message);
+        }
+
+        req.logger.info('Se crea producto correctamente');
+        let prod = new ProductDTO({ description, image, price, stock, category, availability, owner });
+        let userPremium = await userService.getRolUser(owner);
+
+        if (userPremium == 'premium') {
+            let result = await productService.createProduct(prod);
+            res.status(200).send({ status: "success", payload: result });
+            req.logger.info('Se crea producto con usuario premium');
+        } else {
+            req.logger.error("El owner debe contener usuarios premium");
             res.status(500).send({ status: "error", message: "Error interno del servidor" });
         }
-    }
-    let prod = new ProductDTO({ description, image, price, stock, category, availability, owner })
-    let userPremium = await userService.getRolUser(owner)
-    if (userPremium == 'premium') {
-        let result = await productService.createProduct(prod)
-        res.status(200).send({ status: "success", payload: result });
-        req.logger.info('Se crea producto con usuario premium');
-    } else {
-        req.logger.error("El owner debe contener usuarios premium");
+    } catch (error) {
+        req.logger.error("Error al crear el producto: " + error.message);
         res.status(500).send({ status: "error", message: "Error interno del servidor" });
     }
-})
+});
 //Eliminar Producto, en caso de que el producto pertenezca a un usuario premium, le envíe un correo indicándole que el producto fue eliminado
 router.delete('/:idProd', async (req, res) => {
     try 

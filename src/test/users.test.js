@@ -1,5 +1,6 @@
+//users.test.js
 import mongoose from 'mongoose'
-import User from '../dao/mongo/users.mongo.js'
+import User from '../DAO/mongo/users.mongo.js'
 import Assert from 'assert'
 import * as Chai from 'chai'
 import Supertest from 'supertest'
@@ -43,7 +44,7 @@ describe('Testing User DAO Mocha/Chai/SuperTest', () => {
         expect(result).to.have.property('_id') //Chai
     })
     it("El DAO debe devolver un usuario despues de colocar un correo", async function () {
-        let emailToFind = "bastian@gmail.com"
+        let emailToFind = "ge.astudillo.aray@gmail.com"
         const result = await this.usersDao.findEmail({ email: emailToFind })
         assert.strictEqual(typeof result, "object") //Mocha
         expect(result).to.be.an('object') //Chai

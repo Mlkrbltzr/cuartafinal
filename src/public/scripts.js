@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     button.addEventListener("click", (event) => {
       const productId = event.currentTarget.dataset.productId;
       console.log('Botón de detalle clicado para el producto ID:', productId);
-      window.location.href = `/product/${productId}`;
+      window.location.href = `/products/${productId}`;
     });
   });
 

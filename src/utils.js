@@ -7,8 +7,8 @@ import multer from 'multer'
 import fs from 'fs'
 
 export const createHash = async password => {
-    const saltRounds = 10
-    return await bcrypt.hash(password, saltRounds)
+    const saltRounds = 10;
+    return bcrypt.hash(password, saltRounds);
 }
 
 export const isValidPassword = (user,password) => bcrypt.compareSync(password, user.password)
@@ -37,7 +37,7 @@ export const transport= nodemailer.createTransport({
     port:587,
     auth:{
         user:'ge.astudillo.aray@gmail.com',
-        pass:'dbto­cap­vzvj­odpu'
+        pass:'zzhb dqyx hfpt unvv'
     }
 })
 

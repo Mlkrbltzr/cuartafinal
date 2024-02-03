@@ -27,6 +27,7 @@ import loggerMiddleware from "./loggerMiddleware.js";
 import swaggerJSDoc from 'swagger-jsdoc'
 import swaggerUIExpress from 'swagger-ui-express'
 import bodyParser from 'body-parser'
+
 const app = express()
 const port = process.env.PORT || 8080
 
@@ -42,7 +43,7 @@ mongoose.connect(process.env.MONGO_URL, {
 
 const jwtOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: "Secret-key"
+    secretOrKey: "ClaveSecreta"  //Secret-key
 }
 
 passport.use(
@@ -93,7 +94,7 @@ app.use("/apidocs", swaggerUIExpress.serve, swaggerUIExpress.setup(specs))
 //------------------------------------------------------------------------------------//
 //---------------------------------------Socket.io-----------------------------------//
 
-const socketServer = new Server(httpServer)
+const socketServer = new Server(httpServer);
 
 //-------------------------------Prueba conexión-------------------------------------------//
 socketServer.on("connection", socket => {
@@ -111,11 +112,25 @@ socketServer.on("connection", socket => {
         users.updateUserRoleById({uid: id, rol: newRol})
         socketServer.emit("success", "Usuario Actualizado Correctamente");
     });
-    socket.on("newProdInCart", async ({idProd, quantity,email}) => {
-        let idCart = await users.getIdCartByEmailUser(email)
-        carts.addToCart(idCart, idProd, quantity)
-        socketServer.emit("success", "Producto Agregado Correctamente");
+    socket.on("newProdInCart", async ({ idProd, quantity, email }) => {
+        try {
+            let idCart = await users.getIdCartByEmailUser(email);
+    
+            // Asegúrate de que idCart sea una cadena válida o crea un nuevo carrito
+            if (!idCart) {
+                const newCart = await carts.addCart();
+                idCart = newCart._id.toString();
+                await users.updateIdCartUser({ email, newIdCart: idCart });
+            }
+    
+            await carts.addToCart(idCart, idProd, quantity);
+            socketServer.emit("success", "Producto Agregado Correctamente");
+        } catch (error) {
+            console.error("Error al agregar producto al carrito:", error.message);
+            socketServer.emit("error", "Error al agregar producto al carrito");
+        }
     });
+    
     socket.on("newProd", async (newProduct) => {
         let validUserPremium = await users.getUserRoleByEmail(newProduct.owner)
         if(validUserPremium == 'premium'){
@@ -149,13 +164,18 @@ socketServer.on("connection", socket => {
             socketServer.emit("success", "Producto Eliminado Correctamente");
         }     
     });
-    socket.on("delProdPremium", ({id, owner, email}) => {
-        if(owner == email){
-            products.deleteProduct(id)
-            socketServer.emit("success", "Producto Eliminado Correctamente");
-        }else{
-            socketServer.emit("errorDelPremium", "Error al eliminar el producto porque no pertenece a usuario Premium");
-        }  
+    socket.on("delProdPremium", async ({ id, owner, email }) => {
+        try {
+            if (owner == email) {
+                await products.deleteProduct(id);
+                socketServer.emit("success", "Producto Eliminado Correctamente");
+            } else {
+                socketServer.emit("errorDelPremium", "Error al eliminar el producto porque no pertenece a usuario Premium");
+            }
+        } catch (error) {
+            console.error("Error al eliminar el producto:", error);
+            socketServer.emit("errorDelPremium", "Error al eliminar el producto");
+        }
     });
     socket.on("notMatchPass", () => {
         socketServer.emit("warning", "Las contraseñas son distintas, reintente");
@@ -382,22 +402,38 @@ app.post('/forgot-password', async (req, res) => {
 //-----------------------------------Cambiar Contraseña--------------------------------//
 //Ver Carritos//
 app.get("/carts/:cid", async (req, res) => {
-    let id = req.params.cid
-    let emailActive = req.query.email
-    let allCarts  = await carts.getCartWithProducts(id)
-    allCarts.products.forEach(producto => {
-        producto.total = producto.quantity * producto.productId.price
-    });
-    const sumTotal = allCarts.products.reduce((total, producto) => {
-        return total + (producto.total || 0);  // Asegurarse de manejar casos donde total no esté definido
-    }, 0);
-    res.render("viewCart", {
-        title: "Vista Carro",
-        carts : allCarts,
-        user: emailActive,
-        calculateSumTotal: products => products.reduce((total, producto) => total + (producto.total || 0), 0)
-    });
-})
+    try {
+        let id = req.params.cid;
+        let emailActive = req.query.email;
+        let allCarts = await carts.getCartWithProducts(id);
+
+        if (!allCarts || !allCarts.products || !Array.isArray(allCarts.products)) {
+            console.error("Error al obtener el carrito o productos del carrito.");
+            return res.status(500).send("Error interno al procesar la solicitud.");
+        }
+
+        allCarts.products.forEach(producto => {
+            if (producto && producto.productId) {
+                producto.total = producto.quantity * producto.productId.price;
+            }
+        });
+
+        const sumTotal = allCarts.products.reduce((total, producto) => {
+            return total + (producto.total || 0);
+        }, 0);
+
+        res.render("viewCart", {
+            title: "Vista Carro",
+            carts: allCarts,
+            user: emailActive,
+            calculateSumTotal: products => products.reduce((total, producto) => total + (producto.total || 0), 0)
+        });
+    } catch (error) {
+        console.error("Error al obtener el carrito con productos:", error.message);
+        res.status(500).send("Error interno al procesar la solicitud.");
+    }
+});
+
 //Fin Ver Carritos//
 //Ver Checkout//
 app.get("/checkout", async (req, res) => {
@@ -483,3 +519,14 @@ app.get("/mockingproducts", async(req,res)=>{
 
     res.send(products);
 })
+
+/* Programa una tarea cron para ejecutarse todos los días a una hora específica (por ejemplo, a medianoche)
+cron.schedule('0 0 * * *', async () => {
+    try {
+        // Llama a tu función para eliminar usuarios inactivos
+        const resultado = await deleteInactiveUsers();
+        console.log('Usuarios inactivos eliminados con éxito:', resultado);
+    } catch (error) {
+        console.error('Error al eliminar usuarios inactivos:', error);
+    }
+});*/
